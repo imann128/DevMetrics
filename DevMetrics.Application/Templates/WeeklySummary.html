@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>DevMetrics Weekly Report</title>
+  <!--[if mso]>
+  <noscript>
+    <xml><o:OfficeDocumentSettings>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings></xml>
+  </noscript>
+  <![endif]-->
+  <style type="text/css">
+    /* ── Reset ─────────────────────────────────────────────────────────────── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; display: block; }
+
+    /* ── Base ──────────────────────────────────────────────────────────────── */
+    body {
+      background-color: #f4f6f9;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                   Helvetica, Arial, sans-serif;
+      color: #1a1a2e;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ── Wrapper ───────────────────────────────────────────────────────────── */
+    .email-wrapper {
+      width: 100%;
+      padding: 32px 16px;
+      background-color: #f4f6f9;
+    }
+
+    .email-card {
+      max-width: 680px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    /* ── Header ────────────────────────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      padding: 36px 40px;
+      text-align: center;
+    }
+
+    .header-logo {
+      font-size: 28px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .header-logo span {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background-color: #a5f3fc;
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: middle;
+      margin-bottom: 2px;
+    }
+
+    .header-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 15px;
+    }
+
+    /* ── Body ──────────────────────────────────────────────────────────────── */
+    .body-content {
+      padding: 36px 40px;
+    }
+
+    .date-range {
+      font-size: 13px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 24px;
+    }
+
+    /* ── Stat grid ─────────────────────────────────────────────────────────── */
+    .stat-grid {
+      display: table;
+      width: 100%;
+      border-spacing: 0;
+      margin-bottom: 32px;
+    }
+
+    .stat-cell {
+      display: table-cell;
+      width: 33.333%;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      vertical-align: top;
+    }
+
+    .stat-cell + .stat-cell {
+      margin-left: 12px;
+    }
+
+    /* Outlook-compatible spacer */
+    .stat-spacer { width: 12px; display: table-cell; }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: #111827;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-value.green  { color: #059669; }
+    .stat-value.red    { color: #dc2626; }
+
+    .stat-label {
+      font-size: 12px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+    }
+
+    /* ── Data table ────────────────────────────────────────────────────────── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+
+    .data-table thead th {
+      background-color: #f3f4f6;
+      padding: 10px 14px;
+      text-align: right;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #374151;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .data-table thead th:first-child { text-align: left; }
+
+    .data-table tbody td {
+      padding: 11px 14px;
+      border-bottom: 1px solid #f3f4f6;
+      text-align: right;
+      color: #374151;
+    }
+
+    .data-table tbody td:first-child {
+      text-align: left;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .data-table tbody tr:last-child td { border-bottom: none; }
+
+    .data-table tfoot td {
+      padding: 12px 14px;
+      border-top: 2px solid #e5e7eb;
+      font-weight: 700;
+      text-align: right;
+      background-color: #fafafa;
+      font-size: 14px;
+    }
+
+    .data-table tfoot td:first-child { text-align: left; }
+
+    .added   { color: #059669; }
+    .deleted { color: #dc2626; }
+
+    /* ── Empty state ───────────────────────────────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding: 32px 24px;
+      background: #f9fafb;
+      border-radius: 8px;
+      margin-bottom: 32px;
+    }
+
+    .empty-state p {
+      color: #6b7280;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ── Repo list ─────────────────────────────────────────────────────────── */
+    .repo-list {
+      margin-bottom: 32px;
+    }
+
+    .repo-list-title {
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .repo-tag {
+      display: inline-block;
+      background: #ede9fe;
+      color: #5b21b6;
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      margin: 3px;
+    }
+
+    /* ── CTA button ────────────────────────────────────────────────────────── */
+    .cta-wrap {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: #4f46e5;
+      color: #ffffff !important;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.1px;
+    }
+
+    /* ── Footer ────────────────────────────────────────────────────────────── */
+    .footer {
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      padding: 24px 40px;
+      text-align: center;
+    }
+
+    .footer p {
+      font-size: 12px;
+      color: #9ca3af;
+      line-height: 1.6;
+      margin-bottom: 4px;
+    }
+
+    .footer a {
+      color: #6366f1;
+      text-decoration: none;
+    }
+
+    /* ── Responsive ────────────────────────────────────────────────────────── */
+    @media only screen and (max-width: 600px) {
+      .body-content { padding: 24px 20px !important; }
+      .header       { padding: 28px 20px !important; }
+      .footer       { padding: 20px !important; }
+
+      .stat-grid { display: block !important; }
+      .stat-cell { display: block !important; width: 100% !important;
+                   margin-bottom: 12px; }
+      .stat-spacer { display: none !important; }
+
+      .data-table .d-hide { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="email-wrapper">
+<table class="email-card" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+
+  <!-- ── Header ──────────────────────────────────────────────────────────── -->
+  <tr>
+    <td class="header">
+      <div class="header-logo"><span></span>DevMetrics</div>
+      <div class="header-subtitle">Weekly Productivity Report</div>
+    </td>
+  </tr>
+
+  <!-- ── Body ────────────────────────────────────────────────────────────── -->
+  <tr>
+    <td class="body-content">
+
+      <div class="date-range">{{DATE_RANGE}}</div>
+      <div class="section-title">Here's your weekly summary</div>
+
+      <!-- Stat pills -->
+      <table class="stat-grid" role="presentation">
+        <tr>
+          <td class="stat-cell">
+            <div class="stat-value">{{TOTAL_COMMITS}}</div>
+            <div class="stat-label">Commits</div>
+          </td>
+          <td class="stat-spacer"></td>
+          <td class="stat-cell">
+            <div class="stat-value green">+{{TOTAL_ADDED}}</div>
+            <div class="stat-label">Lines Added</div>
+          </td>
+          <td class="stat-spacer"></td>
+          <td class="stat-cell">
+            <div class="stat-value red">-{{TOTAL_DELETED}}</div>
+            <div class="stat-label">Lines Deleted</div>
+          </td>
+        </tr>
+      </table>
+
+      <!-- Day-by-day table -->
+      {{DAILY_TABLE}}
+
+      <!-- Repositories -->
+      <div class="repo-list">
+        <div class="repo-list-title">Repositories tracked</div>
+        {{REPO_TAGS}}
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-wrap">
+        <a href="{{DASHBOARD_URL}}" class="cta-button">Open Dashboard →</a>
+      </div>
+
+    </td>
+  </tr>
+
+  <!-- ── Footer ──────────────────────────────────────────────────────────── -->
+  <tr>
+    <td class="footer">
+      <p>Generated by <a href="{{DASHBOARD_URL}}">DevMetrics</a> · All timestamps are UTC</p>
+      <p>You are receiving this because your address is in the weekly report recipients list.</p>
+    </td>
+  </tr>
+
+</table>
+</div>
+</body>
+</html>

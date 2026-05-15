@@ -1,0 +1,80 @@
+## .NET / C# / ASP.NET Core
+# Build outputs
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Ll]og/
+[Ll]ogs/
+
+# NuGet packages (restored automatically; never commit)
+*.nupkg
+*.snupkg
+**/[Pp]ackages/
+!**/[Pp]ackages/build/
+.nuget/
+
+# Visual Studio user-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+.vs/
+
+# Rider
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/
+
+# Publish / deployment outputs
+[Pp]ublish/
+[Pp]ublish[Oo]utput*/
+**/publish/
+
+# ASP.NET Core static files lock
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Entity Framework migrations temp files (keep actual migration .cs files)
+*.mdf
+*.ldf
+
+# SQLite database — contains runtime data; must never be committed
+*.db
+*.db-shm
+*.db-wal
+Data/*.db
+Data/*.db-shm
+Data/*.db-wal
+
+# Application log files
+Logs/
+*.log
+
+# Test results / coverage artefacts
+TestResults/
+CoverageReport/
+coverage*.xml
+*.trx
+*.coveragexml
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+secrets.json
+appsettings.Secrets.json
+
+# OS-generated
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini

@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  DOTNET_VERSION: '8.0.x'
+
+# Cancel in-progress runs for the same branch when a new push arrives.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ── Job 1: Build & Test ─────────────────────────────────────────────────────
+  build-and-test:
+    name: Build & Test (.NET ${{ matrix.dotnet }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        dotnet: [ '8.0.x' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Full history for SonarQube / GitVersion if added later
+
+      - name: Setup .NET ${{ matrix.dotnet }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build (Release)
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run unit tests
+        run: |
+          dotnet test DevMetrics.Tests/DevMetrics.Tests.csproj \
+            --configuration Release \
+            --no-build \
+            --filter "Category!=Integration" \
+            --logger "trx;LogFileName=unit-tests.trx" \
+            --results-directory ./TestResults/unit \
+            --collect:"XPlat Code Coverage" \
+            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+
+      - name: Run integration tests
+        run: |
+          dotnet test DevMetrics.Tests/DevMetrics.Tests.csproj \
+            --configuration Release \
+            --no-build \
+            --filter "Category=Integration|FullyQualifiedName~Integration" \
+            --logger "trx;LogFileName=integration-tests.trx" \
+            --results-directory ./TestResults/integration
+        env:
+          ASPNETCORE_ENVIRONMENT: Testing
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()   # Upload even when tests fail so results are inspectable
+        with:
+          name: test-results-${{ matrix.dotnet }}
+          path: ./TestResults/**/*.trx
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-${{ matrix.dotnet }}
+          path: ./TestResults/**/coverage.cobertura.xml
+
+      - name: Publish coverage to Codecov
+        uses: codecov/codecov-action@v4
+        if: github.actor != 'dependabot[bot]'
+        with:
+          files: ./TestResults/**/coverage.cobertura.xml
+          fail_ci_if_error: false   # Don't break the build on upload failure
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+

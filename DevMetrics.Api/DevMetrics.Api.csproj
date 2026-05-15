@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Emit XML docs consumed by Swagger/Swashbuckle -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+  <!-- Expose Program class to WebApplicationFactory in DevMetrics.Tests -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="DevMetrics.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DevMetrics.Application\DevMetrics.Application.csproj" />
+    <ProjectReference Include="..\DevMetrics.Infrastructure\DevMetrics.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- EF Core design-time tooling (dotnet ef database update from Api startup project) -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+
+    <!-- NOTE: Microsoft.AspNetCore.SignalR ships inside the Web SDK.
+         No extra NuGet reference is needed. Do NOT add it — it will conflict. -->
+
+    <!-- OpenAPI / Swagger UI -->
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
+
+    <!-- Structured logging -->
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+
+    <!-- Health checks framework -->
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.0" />
+
+    <!-- Container-friendly log enrichment with MachineName and EnvironmentName -->
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.0" />
+
+    <!-- In-memory cache for scan-operation tracking -->
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.0" />
+  </ItemGroup>
+
+</Project>

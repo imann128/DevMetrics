@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <!-- Needed for Moq 4.x Castle.Core compatibility -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Emit test results in a format compatible with dotnet-coverage -->
+    <CollectCoverage>false</CollectCoverage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- xUnit -->
+    <PackageReference Include="Microsoft.NET.Test.Sdk"         Version="17.9.0" />
+    <PackageReference Include="xunit"                          Version="2.9.0" />
+    <PackageReference Include="xunit.runner.visualstudio"      Version="2.8.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+
+    <!-- Assertions -->
+    <PackageReference Include="FluentAssertions"               Version="6.12.0" />
+
+    <!-- Mocking -->
+    <PackageReference Include="Moq"                            Version="4.20.72" />
+
+    <!-- Integration test host -->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
+
+    <!-- SignalR client for hub integration tests -->
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.0" />
+
+    <!-- SQLite for integration tests (same provider as production) -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+
+    <!-- Database reset between integration tests -->
+    <PackageReference Include="Respawn"                        Version="6.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DevMetrics.Core\DevMetrics.Core.csproj" />
+    <ProjectReference Include="..\DevMetrics.Application\DevMetrics.Application.csproj" />
+    <ProjectReference Include="..\DevMetrics.Infrastructure\DevMetrics.Infrastructure.csproj" />
+    <ProjectReference Include="..\DevMetrics.Api\DevMetrics.Api.csproj" />
+  </ItemGroup>
+
+</Project>

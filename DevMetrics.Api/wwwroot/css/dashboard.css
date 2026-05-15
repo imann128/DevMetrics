@@ -1,0 +1,162 @@
+/* ── DevMetrics custom stylesheet ─────────────────────────────────────────── */
+/* Loaded after Bootstrap 5 — overrides and additions only.                   */
+
+/* ── Typography ───────────────────────────────────────────────────────────── */
+body {
+  font-feature-settings: "kern", "liga";
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────────── */
+.dm-card {
+  border: 1px solid var(--bs-border-color);
+  border-radius: .75rem;
+  transition: box-shadow .15s ease;
+}
+
+.dm-card:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .08);
+}
+
+[data-bs-theme="dark"] .dm-card:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .35);
+}
+
+.dm-card .card-header {
+  background: transparent;
+  border-bottom: 1px solid var(--bs-border-color);
+  font-weight: 600;
+  font-size: .8125rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--bs-secondary-color);
+  padding: .75rem 1.25rem;
+}
+
+/* ── Stat cards ───────────────────────────────────────────────────────────── */
+.card-body .h3 {
+  font-size: 1.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Connection status badge ──────────────────────────────────────────────── */
+#connection-badge {
+  font-size: .75rem;
+  padding: .3em .6em;
+  transition: background-color .3s ease;
+}
+
+#connection-badge .connection-dot {
+  display: inline-block;
+  width:  7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+#connection-badge.connected {
+  background-color: var(--bs-success);
+}
+
+#connection-badge.connected .connection-dot {
+  animation: dm-pulse 2.2s ease-in-out infinite;
+}
+
+#connection-badge.reconnecting {
+  background-color: var(--bs-warning);
+  color: #000;
+}
+
+#connection-badge.disconnected {
+  background-color: var(--bs-danger);
+}
+
+@keyframes dm-pulse {
+  0%, 100% { opacity: 1;  transform: scale(1);    }
+  50%       { opacity: .4; transform: scale(1.15); }
+}
+
+/* ── Repository table ─────────────────────────────────────────────────────── */
+#repo-table th {
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  font-weight: 600;
+  color: var(--bs-secondary-color);
+}
+
+#repo-table td {
+  vertical-align: middle;
+}
+
+.repo-path {
+  font-family: var(--bs-font-monospace);
+  font-size: .78rem;
+  max-width: 260px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* ── Freshness indicators ─────────────────────────────────────────────────── */
+.stale { color: var(--bs-warning-text-emphasis); }
+.fresh { color: var(--bs-success-text-emphasis); }
+
+/* ── Chart ────────────────────────────────────────────────────────────────── */
+.chart-wrap {
+  position: relative;
+  height: 320px;
+}
+
+@media (max-width: 575.98px) {
+  .chart-wrap { height: 220px; }
+}
+
+/* ── Add-repo form ────────────────────────────────────────────────────────── */
+#RepoPath {
+  font-family: var(--bs-font-monospace);
+  font-size: .875rem;
+}
+
+/* ── Navbar ───────────────────────────────────────────────────────────────── */
+.navbar-brand span {
+  font-size: 1.1rem;
+  letter-spacing: -.01em;
+}
+
+/* ── Toasts ───────────────────────────────────────────────────────────────── */
+.toast {
+  min-width: 280px;
+  max-width: 380px;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 767.98px) {
+  main.container-fluid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .card-body .h3 {
+    font-size: 1.4rem;
+  }
+}
+
+/* ── Loading skeleton shimmer (used for initial blank state) ──────────────── */
+.dm-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bs-tertiary-bg) 25%,
+    var(--bs-secondary-bg) 50%,
+    var(--bs-tertiary-bg) 75%
+  );
+  background-size: 200% 100%;
+  animation: dm-shimmer 1.5s infinite;
+  border-radius: .375rem;
+}
+
+@keyframes dm-shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}

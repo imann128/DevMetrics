@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DevMetrics.Core\DevMetrics.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- CQRS / Mediator pattern (v12+) -->
+    <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0" />
+
+    <!-- IHostedService / BackgroundService / PeriodicTimer abstractions -->
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
+
+    <!-- IOptions<T> and IValidateOptions<T> -->
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="8.0.0" />
+
+    <!-- IMemoryCache — injected into singleton background services -->
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
+
+    <!-- Cron expression parsing with DST-safe next-occurrence calculation -->
+    <PackageReference Include="Cronos" Version="0.8.4" />
+
+    <!-- SMTP client -->
+    <PackageReference Include="MailKit" Version="4.8.0" />
+    <PackageReference Include="MimeKit" Version="4.8.0" />
+  </ItemGroup>
+
+  <!-- Embed the weekly summary HTML template so it is always present at runtime -->
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\WeeklySummary.html" />
+  </ItemGroup>
+
+</Project>

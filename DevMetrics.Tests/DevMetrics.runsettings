@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RunSettings>
+
+  <RunConfiguration>
+    <!-- Use VSTest platform defaults -->
+    <MaxCpuCount>1</MaxCpuCount>
+    <ResultsDirectory>./TestResults</ResultsDirectory>
+    <TestSessionTimeout>120000</TestSessionTimeout>
+  </RunConfiguration>
+
+  <!-- Coverlet data collector (install coverlet.collector NuGet to use) -->
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <!-- Target only our own projects — exclude framework, generated, and test code -->
+          <Include>
+            [DevMetrics.Core]*
+            [DevMetrics.Application]*
+            [DevMetrics.Infrastructure]*
+            [DevMetrics.Api]*
+          </Include>
+          <Exclude>
+            [DevMetrics.Tests]*
+            [*]*.Migrations.*
+            [*]*Program
+          </Exclude>
+
+          <!-- Exclude auto-generated and trivial members -->
+          <ExcludeByAttribute>
+            GeneratedCodeAttribute,
+            CompilerGeneratedAttribute,
+            ExcludeFromCodeCoverageAttribute
+          </ExcludeByAttribute>
+
+          <!-- Format: cobertura (compatible with GitHub Actions, Azure DevOps, SonarQube) -->
+          <Format>cobertura</Format>
+
+          <!-- Target coverage threshold (enforced by dotnet test --threshold) -->
+          <!-- Run with: dotnet test --collect:"XPlat Code Coverage" --settings DevMetrics.runsettings -->
+          <Threshold>80</Threshold>
+          <ThresholdType>line</ThresholdType>
+          <ThresholdStat>Total</ThresholdStat>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+
+  <!-- xUnit-specific settings (mirrors xunit.runner.json for CLI runs) -->
+  <TestRunParameters>
+    <Parameter name="Environment" value="Testing" />
+  </TestRunParameters>
+
+</RunSettings>
