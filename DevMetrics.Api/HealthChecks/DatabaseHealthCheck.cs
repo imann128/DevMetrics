@@ -6,7 +6,7 @@ namespace DevMetrics.Api.HealthChecks;
 
 /// <summary>
 /// Health check that verifies the SQLite database is reachable and the schema
-/// is up to date by calling <see cref="AppDbContext.Database.CanConnectAsync"/>.
+/// is up to date by calling <c>DatabaseFacade.CanConnectAsync</c>.
 /// </summary>
 /// <remarks>
 /// Registered as <c>"database"</c> in <c>Program.cs</c> with the

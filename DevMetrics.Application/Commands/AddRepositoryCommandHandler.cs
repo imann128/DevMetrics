@@ -116,25 +116,23 @@ public sealed class AddRepositoryCommandHandler
     /// or a <c>HEAD</c> file at the root (bare clone / worktree).
     /// </summary>
     private static void ValidateIsGitRepository(string path)
-{
-    var dotGit = System.IO.Path.Combine(path, ".git");
-    if (Directory.Exists(dotGit) || File.Exists(dotGit))
-        return;
+    {
+        // Standard clone: contains a .git sub-directory (or a .git file for worktrees).
+        var dotGit = System.IO.Path.Combine(path, ".git");
+        if (Directory.Exists(dotGit) || File.Exists(dotGit))
+            return;
 
-    var headFile   = System.IO.Path.Combine(path, "HEAD");
-    var objectsDir = System.IO.Path.Combine(path, "objects");
-    if (File.Exists(headFile) && Directory.Exists(objectsDir))
-        return;
+        // Bare clone: HEAD file and objects/ directory sit directly in the repo root.
+        var headFile   = System.IO.Path.Combine(path, "HEAD");
+        var objectsDir = System.IO.Path.Combine(path, "objects");
+        if (File.Exists(headFile) && Directory.Exists(objectsDir))
+            return;
 
-    // Last resort — just try to proceed and let LibGit2Sharp validate
-    if (Directory.Exists(path))
-        return;
-
-    throw new ArgumentException(
-        $"'{path}' does not appear to be a Git repository " +
-        "(no .git directory and no bare-repository structure found).",
-        nameof(path));
-}
+        throw new ArgumentException(
+            $"'{path}' does not appear to be a Git repository " +
+            "(no .git directory and no bare-repository structure found).",
+            nameof(path));
+    }
     /// <summary>
     /// Normalises a path: trims whitespace, resolves relative paths to absolute,
     /// and removes a trailing directory separator.

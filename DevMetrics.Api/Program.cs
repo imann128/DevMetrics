@@ -252,11 +252,9 @@ static async Task ApplyMigrationsAsync(WebApplication app)
     }
 }
 
-/// <summary>
-/// Writes health check results as structured JSON instead of the default plain-text
-/// "Healthy" / "Unhealthy" response. This makes the endpoint consumable by monitoring
-/// tools (Prometheus, Datadog, Uptime Kuma, etc.) without custom parsers.
-/// </summary>
+// Writes health check results as structured JSON instead of the default plain-text
+// "Healthy" / "Unhealthy" response. This makes the endpoint consumable by monitoring
+// tools (Prometheus, Datadog, Uptime Kuma, etc.) without custom parsers.
 static Task WriteHealthResponse(HttpContext ctx, HealthReport report)
 {
     ctx.Response.ContentType = "application/json; charset=utf-8";

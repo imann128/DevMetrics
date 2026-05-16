@@ -83,7 +83,7 @@ public sealed class DashboardHubIntegrationTests
             tcs.TrySetResult(payload);
         });
 
-        await _connection.InvokeAsync("JoinDashboardGroup", "dashboard", cts.Token);
+        await _connection!.InvokeAsync("JoinDashboardGroup", "dashboard", cts.Token);
 
         // Act — use the hub context to broadcast from the server side.
         // Resolve IHubContext from the factory's service provider.
@@ -122,7 +122,7 @@ public sealed class DashboardHubIntegrationTests
         _connection!.On<string, string>("RepositoryActivityDetected",
             (path, name) => tcs.TrySetResult(new { path, name }));
 
-        await _connection.InvokeAsync("JoinDashboardGroup", "dashboard", cts.Token);
+        await _connection!.InvokeAsync("JoinDashboardGroup", "dashboard", cts.Token);
 
         using var scope = _factory.Services.CreateScope();
         var hubContext  = scope.ServiceProvider
@@ -148,7 +148,7 @@ public sealed class DashboardHubIntegrationTests
 
         // Act
         var act = async () =>
-            await _connection.InvokeAsync("LeaveDashboardGroup", "dashboard");
+            await _connection!.InvokeAsync("LeaveDashboardGroup", "dashboard");
 
         // Assert — removing from a group should not throw.
         await act.Should().NotThrowAsync();

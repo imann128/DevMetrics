@@ -44,6 +44,7 @@ public sealed class RepositoriesController : ControllerBase
     /// The repository must exist on disk and contain a valid <c>.git</c> directory.
     /// </summary>
     /// <param name="request">JSON body containing the absolute path to the repository.</param>
+    /// <param name="ct">Cancellation token.</param>
     /// <response code="201">Repository registered. Location header points to the new resource.</response>
     /// <response code="400">Path is missing, doesn't exist, or is not a Git repository.</response>
     /// <response code="409">The path is already tracked.</response>
@@ -72,6 +73,7 @@ public sealed class RepositoriesController : ControllerBase
     /// daily summaries. This action cannot be undone.
     /// </summary>
     /// <param name="id">The unique identifier of the repository to remove.</param>
+    /// <param name="ct">Cancellation token.</param>
     /// <response code="204">Repository deleted successfully.</response>
     /// <response code="404">No repository with this identifier exists.</response>
     [HttpDelete("{id:guid}")]

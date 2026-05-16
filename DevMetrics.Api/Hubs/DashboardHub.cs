@@ -13,7 +13,7 @@ namespace DevMetrics.Api.Hubs;
 ///   <item>
 ///     <description>
 ///       <c>ScanCompleted</c> — pushed after every scan cycle with a
-///       <c>ScanResultDto</c> payload. See <see cref="SignalRScanNotifier"/>.
+///       <c>ScanResultDto</c> payload. See <c>SignalRScanNotifier</c>.
 ///     </description>
 ///   </item>
 ///   <item>
