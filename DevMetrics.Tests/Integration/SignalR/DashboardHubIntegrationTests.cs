@@ -130,7 +130,7 @@ public sealed class DashboardHubIntegrationTests
                 Microsoft.AspNetCore.SignalR.IHubContext<DevMetrics.Api.Hubs.DashboardHub>>();
 
         // Act — server broadcasts the repository activity event.
-        await hubContext.Clients.All.SendCoreAsync("RepositoryActivityDetected", new object[] { new { repositoryPath = "/repos/my-project", repositoryName = "my-project" } }, cts.Token);
+        await hubContext.Clients.All.SendCoreAsync("RepositoryActivityDetected", new object[] { "/repos/my-project", "my-project" }, cts.Token);
 
         cts.Token.Register(() => tcs.TrySetCanceled());
 
