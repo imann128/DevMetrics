@@ -47,8 +47,14 @@ COPY --from=build --chown=app:app /app/publish .
 VOLUME ["/app/Data", "/app/Logs"]
 
 # Kestrel: bind to all interfaces on port 80 (mapped to host 5000 in compose).
-ENV ASPNETCORE_URLS=http://+:80
-ENV ASPNETCORE_ENVIRONMENT=Production
+# DOTNET_RUNNING_IN_CONTAINER is a .NET convention used by some libraries to
+# adjust behaviour for containerised environments (e.g. health-check timeouts).
+# DOTNET_USE_POLLING_FILE_WATCHER disables inotify-based file watching, which
+# is not needed at runtime and saves a small amount of CPU inside the container.
+ENV ASPNETCORE_URLS=http://+:80 \
+    ASPNETCORE_ENVIRONMENT=Production \
+    DOTNET_RUNNING_IN_CONTAINER=true \
+    DOTNET_USE_POLLING_FILE_WATCHER=false
 
 EXPOSE 80
 
