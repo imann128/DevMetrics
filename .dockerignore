@@ -1,0 +1,39 @@
+# Build artefacts
+**/bin/
+**/obj/
+
+# SQLite database files — created fresh inside the container
+**/*.db
+**/*.db-shm
+**/*.db-wal
+**/Data/
+
+# Logs
+**/Logs/
+
+# Test project — not needed in the image
+DevMetrics.Tests/
+TestResults/
+
+# Git metadata
+.git/
+.github/
+
+# IDE / OS
+.vs/
+.vscode/
+*.user
+.DS_Store
+Thumbs.db
+
+# Secrets and environment overrides
+.env
+secrets.json
+**/secrets.json
+
+# Environment-specific appsettings — keep only base + Production
+**/appsettings.Development.json
+**/appsettings.Testing.json
+
+# NuGet
+*.nupkg

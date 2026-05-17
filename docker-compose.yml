@@ -1,0 +1,54 @@
+services:
+  devmetrics:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: devmetrics
+    ports:
+      - "5000:80"       # Dashboard → http://localhost:5000
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+
+      # ── Email (weekly summary) ─────────────────────────────────────────────
+      # Override any appsettings.json Email section key with the pattern
+      # Email__<Key>=<value>.  Leave Enabled=false to skip email entirely.
+      Email__Enabled: "false"
+      Email__Host: "smtp.gmail.com"
+      Email__Port: "587"
+      Email__Username: ""           # fill in, or use a .env file (see below)
+      Email__Password: ""           # fill in, or use a .env file (see below)
+      Email__FromAddress: ""
+      Email__FromName: "DevMetrics"
+      Email__DashboardBaseUrl: "http://localhost:5000"
+
+      # To keep credentials out of this file, create a .env file alongside
+      # docker-compose.yml and reference variables like:
+      #   Email__Username: "${DEVMETRICS_EMAIL_USER}"
+      #   Email__Password: "${DEVMETRICS_EMAIL_PASS}"
+
+    volumes:
+      # Named volumes — SQLite database and log files persist across restarts.
+      - devmetrics-data:/app/Data
+      - devmetrics-logs:/app/Logs
+
+      # ── Git repository mounts ──────────────────────────────────────────────
+      # Mount each local repository you want DevMetrics to scan.
+      # Use read-only (:ro) so the container cannot modify your source code.
+      # The path you register in the dashboard must match the container path.
+      #
+      # Example:
+      #   - /home/user/projects/my-api:/repos/my-api:ro
+      #   - /home/user/projects/my-frontend:/repos/my-frontend:ro
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80/health/live || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s   # allow time for EF migration on first run
+
+volumes:
+  devmetrics-data:
+  devmetrics-logs:
