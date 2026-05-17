@@ -195,7 +195,6 @@ function buildChartData(summaries) {
     labels,
     datasets: [
       {
-        type:                 'line',
         label:                'Commits',
         data:                 summaries.map(s => s.totalCommits),
         borderColor:          'rgba(99,102,241,1)',
@@ -208,30 +207,6 @@ function buildChartData(summaries) {
         pointHoverRadius:     6,
         tension:              0.4,
         fill:                 true,
-        yAxisID:              'yCommits',
-        order:                1,
-      },
-      {
-        type:            'bar',
-        label:           'Lines added',
-        data:            summaries.map(s => s.linesAdded),
-        backgroundColor: 'rgba(34,197,94,0.5)',
-        borderColor:     'rgba(34,197,94,0.8)',
-        borderWidth:     1,
-        borderRadius:    4,
-        yAxisID:         'yLines',
-        order:           2,
-      },
-      {
-        type:            'bar',
-        label:           'Lines deleted',
-        data:            summaries.map(s => -s.linesDeleted),
-        backgroundColor: 'rgba(239,68,68,0.5)',
-        borderColor:     'rgba(239,68,68,0.8)',
-        borderWidth:     1,
-        borderRadius:    4,
-        yAxisID:         'yLines',
-        order:           3,
       },
     ]
   };
@@ -276,11 +251,7 @@ function initChart(summaries) {
           borderWidth:     1,
           padding:         10,
           callbacks: {
-            label: (ctx) => {
-              const val = Math.abs(ctx.parsed.y).toLocaleString();
-              if (ctx.dataset.label === 'Lines deleted') return `  Lines deleted: ${val}`;
-              return `  ${ctx.dataset.label}: ${val}`;
-            }
+            label: (ctx) => `  Commits: ${ctx.parsed.y.toLocaleString()}`
           }
         }
       },
@@ -289,20 +260,10 @@ function initChart(summaries) {
           ticks: { color: tickColor, maxRotation: 45, font: { size: 11 } },
           grid:  { color: gridColor },
         },
-        yCommits: {
-          type:     'linear',
-          position: 'left',
-          title:    { display: true, text: 'Commits', color: tickColor, font: { size: 11 } },
-          ticks:    { color: tickColor, precision: 0, font: { size: 11 } },
-          grid:     { color: gridColor },
-          min:      0,
-        },
-        yLines: {
-          type:     'linear',
-          position: 'right',
-          title:    { display: true, text: 'Lines Δ', color: tickColor, font: { size: 11 } },
-          ticks:    { color: tickColor, precision: 0, font: { size: 11 } },
-          grid:     { drawOnChartArea: false },
+        y: {
+          ticks: { color: tickColor, precision: 0, font: { size: 11 } },
+          grid:  { color: gridColor },
+          min:   0,
         },
       }
     }
@@ -679,8 +640,8 @@ function watchTheme() {
         const summaries = chart.data.labels.map((label, i) => ({
           date:         label,
           totalCommits: chart.data.datasets[0].data[i],
-          linesAdded:   chart.data.datasets[1].data[i],
-          linesDeleted: -(chart.data.datasets[2].data[i]),
+          linesAdded:   0,
+          linesDeleted: 0,
         }));
         initChart(summaries);
       }

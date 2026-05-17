@@ -30,6 +30,7 @@ services:
       # Named volumes — SQLite database and log files persist across restarts.
       - devmetrics-data:/app/Data
       - devmetrics-logs:/app/Logs
+      - D:\Users\Downloads\DevMetrics:/repos/DevMetrics:ro
 
       # ── Git repository mounts ──────────────────────────────────────────────
       # Mount each local repository you want DevMetrics to scan.
@@ -60,3 +61,4 @@ services:
 volumes:
   devmetrics-data:
   devmetrics-logs:
+
