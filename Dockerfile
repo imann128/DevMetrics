@@ -31,10 +31,18 @@ RUN dotnet publish DevMetrics.Api/DevMetrics.Api.csproj \
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 
-# Create the directories that will be mounted as volumes and grant ownership
-# to the non-root "app" user that ships in the base image.
+# Still running as root here — set up directories and system-level git config
+# before dropping privileges.
 RUN mkdir -p /app/Data /app/Logs \
-    && chown -R app:app /app
+    && chown -R app:app /app \
+    # libgit2 (used by LibGit2Sharp) enforces an ownership check: the process
+    # user must own the repository directory. Docker volumes mounted from a
+    # Windows host appear as root-owned inside the container, so libgit2 refuses
+    # to open them when running as the non-root app user.
+    # Writing safe.directory=* to /etc/gitconfig (system-level, read by libgit2)
+    # suppresses this check for all directories — intentional for a read-only
+    # volume mount scenario where we trust the host filesystem.
+    && printf '[safe]\n\tdirectory = *\n' > /etc/gitconfig
 
 # Drop root privileges.
 USER app
