@@ -1,4 +1,5 @@
 # DevMetrics
+![CI](https://github.com/YOUR_USERNAME/DevMetrics/actions/workflows/dotnet.yml/badge.svg)
 
 **DevMetrics** is a self-hosted developer productivity dashboard that tracks local Git activity in real time. It scans your Git repositories, aggregates commit history and diff statistics, and serves the data through a live web dashboard with automatic updates via SignalR.
 
