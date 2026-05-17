@@ -3,10 +3,12 @@
 **/obj/
 
 # SQLite database files — created fresh inside the container
+# Note: DevMetrics.Infrastructure/Data/ contains AppDbContext.cs source — do NOT exclude it.
+# Only exclude the Api's runtime database directory.
 **/*.db
 **/*.db-shm
 **/*.db-wal
-**/Data/
+DevMetrics.Api/Data/
 
 # Logs
 **/Logs/
