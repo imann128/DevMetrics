@@ -6,7 +6,7 @@ body {
   font-feature-settings: "kern", "liga";
 }
 
-/* ── Card ─────────────────────────────────────────────────────────────────── */
+/* ── Base card ────────────────────────────────────────────────────────────── */
 .dm-card {
   border: 1px solid var(--bs-border-color);
   border-radius: .75rem;
@@ -33,10 +33,48 @@ body {
 }
 
 /* ── Stat cards ───────────────────────────────────────────────────────────── */
-.card-body .h3 {
-  font-size: 1.75rem;
-  font-variant-numeric: tabular-nums;
+.dm-stat-card {
+  border-top: 3px solid var(--dm-accent, var(--bs-primary)) !important;
+  border-radius: .75rem;
 }
+
+.stat-label {
+  font-size: .72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--bs-secondary-color);
+  margin-bottom: .35rem;
+}
+
+.stat-value {
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: .3rem;
+  letter-spacing: -.02em;
+}
+
+.stat-sublabel {
+  font-size: .7rem;
+  color: var(--bs-secondary-color);
+  margin-top: .2rem;
+}
+
+/* ── Trend badges ─────────────────────────────────────────────────────────── */
+.dm-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: .2em;
+  font-size: .72rem;
+  font-weight: 600;
+  min-height: 1.3em;
+}
+
+.dm-trend.up   { color: var(--bs-success-text-emphasis); }
+.dm-trend.down { color: var(--bs-danger-text-emphasis);  }
+.dm-trend.flat { color: var(--bs-secondary-color);       }
 
 /* ── Connection status badge ──────────────────────────────────────────────── */
 #connection-badge {
@@ -53,21 +91,12 @@ body {
   background: currentColor;
 }
 
-#connection-badge.connected {
-  background-color: var(--bs-success);
-}
+#connection-badge.connected    { background-color: var(--bs-success); }
+#connection-badge.reconnecting { background-color: var(--bs-warning); color: #000; }
+#connection-badge.disconnected { background-color: var(--bs-danger);  }
 
 #connection-badge.connected .connection-dot {
   animation: dm-pulse 2.2s ease-in-out infinite;
-}
-
-#connection-badge.reconnecting {
-  background-color: var(--bs-warning);
-  color: #000;
-}
-
-#connection-badge.disconnected {
-  background-color: var(--bs-danger);
 }
 
 @keyframes dm-pulse {
@@ -84,9 +113,7 @@ body {
   color: var(--bs-secondary-color);
 }
 
-#repo-table td {
-  vertical-align: middle;
-}
+#repo-table td { vertical-align: middle; }
 
 .repo-path {
   font-family: var(--bs-font-monospace);
@@ -106,11 +133,43 @@ body {
 /* ── Chart ────────────────────────────────────────────────────────────────── */
 .chart-wrap {
   position: relative;
-  height: 320px;
+  height: 300px;
 }
 
 @media (max-width: 575.98px) {
-  .chart-wrap { height: 220px; }
+  .chart-wrap { height: 200px; }
+}
+
+/* ── Activity highlights strip ───────────────────────────────────────────── */
+.highlight-strip {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: .75rem 1.25rem;
+  border-top: 1px solid var(--bs-border-color);
+  background: var(--bs-tertiary-bg);
+  border-radius: 0 0 .75rem .75rem;
+}
+
+.highlight-item {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .8125rem;
+}
+
+.highlight-item .hi-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.highlight-item .hi-value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.highlight-item .hi-label {
+  color: var(--bs-secondary-color);
 }
 
 /* ── Add-repo form ────────────────────────────────────────────────────────── */
@@ -138,12 +197,10 @@ body {
     padding-right: 1rem;
   }
 
-  .card-body .h3 {
-    font-size: 1.4rem;
-  }
+  .stat-value { font-size: 1.5rem; }
 }
 
-/* ── Loading skeleton shimmer (used for initial blank state) ──────────────── */
+/* ── Loading skeleton shimmer ─────────────────────────────────────────────── */
 .dm-skeleton {
   background: linear-gradient(
     90deg,

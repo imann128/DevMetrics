@@ -3,60 +3,16 @@
 @{
     ViewData["Title"] = "Dashboard";
 
-    // Serialize server-side data into JS-safe JSON for chart bootstrapping.
-    // JsonSerializerOptions uses camelCase to match the API's serialization.
-    var jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    var jsonOptions      = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
     var summariesJson    = JsonSerializer.Serialize(Model.DashboardData?.DailySummaries
                                ?? new List<CommitSummaryDto>(), jsonOptions);
     var repositoriesJson = JsonSerializer.Serialize(Model.Repositories
                                ?? new List<RepositoryDto>(), jsonOptions);
-}
 
-@section Styles {
-<style>
-  /* ── Card polish ────────────────────────────────────────────────────── */
-  .dm-card          { border: 1px solid var(--bs-border-color); border-radius: .75rem; }
-  .dm-card .card-header {
-    background: transparent;
-    border-bottom: 1px solid var(--bs-border-color);
-    font-weight: 600;
-    font-size: .875rem;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-  }
-
-  /* ── Stat pill badges ───────────────────────────────────────────────── */
-  .stat-pill        { font-size: .8rem; padding: .25em .65em; border-radius: 999px; }
-
-  /* ── Repo table ─────────────────────────────────────────────────────── */
-  #repo-table td, #repo-table th { vertical-align: middle; font-size: .875rem; }
-  .repo-path        { font-family: var(--bs-font-monospace); font-size: .8rem;
-                      max-width: 260px; overflow: hidden; text-overflow: ellipsis;
-                      white-space: nowrap; }
-
-  /* ── Scan badge freshness ───────────────────────────────────────────── */
-  .stale            { color: var(--bs-warning); }
-  .fresh            { color: var(--bs-success); }
-
-  /* ── Connection dot (pulsing when connected) ────────────────────────── */
-  .connection-dot   { display: inline-block; width: 8px; height: 8px;
-                      border-radius: 50%; background: currentColor; }
-  #connection-badge.connected    { background-color: var(--bs-success); }
-  #connection-badge.connected .connection-dot { animation: pulse 2s infinite; }
-  #connection-badge.reconnecting { background-color: var(--bs-warning); color: #000; }
-  #connection-badge.disconnected { background-color: var(--bs-danger); }
-
-  @@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: .4; }
-  }
-
-  /* ── Chart container ────────────────────────────────────────────────── */
-  .chart-wrap       { position: relative; height: 320px; }
-
-  /* ── Validation ─────────────────────────────────────────────────────── */
-  .validation-summary-errors ul { margin: 0; padding-left: 1.2rem; }
-</style>
+    var totalCommits  = Model.DashboardData?.DailySummaries.Sum(d => d.TotalCommits)  ?? 0;
+    var totalAdded    = Model.DashboardData?.DailySummaries.Sum(d => d.LinesAdded)    ?? 0;
+    var totalDeleted  = Model.DashboardData?.DailySummaries.Sum(d => d.LinesDeleted)  ?? 0;
+    var repoCount     = Model.Repositories?.Count ?? 0;
 }
 
 <!-- ── Page header ────────────────────────────────────────────────────────── -->
@@ -73,7 +29,6 @@
     </p>
   </div>
 
-  <!-- Manual scan trigger -->
   <button id="btn-trigger-scan"
           class="btn btn-primary d-flex align-items-center gap-2"
           title="Trigger an immediate scan">
@@ -85,56 +40,85 @@
   </button>
 </div>
 
-<!-- ── Top row: stat cards ────────────────────────────────────────────────── -->
-<div class="row g-3 mb-4" id="stat-cards">
-  <div class="col-6 col-md-3">
-    <div class="card dm-card h-100">
-      <div class="card-body">
-        <div class="text-body-secondary small mb-1">Repositories</div>
-        <div class="h3 fw-bold mb-0" id="stat-repos">
-          @(Model.Repositories?.Count ?? 0)
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-6 col-md-3">
-    <div class="card dm-card h-100">
-      <div class="card-body">
-        <div class="text-body-secondary small mb-1">Commits (14d)</div>
-        <div class="h3 fw-bold mb-0" id="stat-commits">
-          @(Model.DashboardData?.DailySummaries.Sum(d => d.TotalCommits) ?? 0)
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-6 col-md-3">
-    <div class="card dm-card h-100">
-      <div class="card-body">
-        <div class="text-body-secondary small mb-1">Lines Added (14d)</div>
-        <div class="h3 fw-bold mb-0 text-success" id="stat-added">
-          +@(Model.DashboardData?.DailySummaries.Sum(d => d.LinesAdded) ?? 0)
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-6 col-md-3">
-    <div class="card dm-card h-100">
-      <div class="card-body">
-        <div class="text-body-secondary small mb-1">Lines Deleted (14d)</div>
-        <div class="h3 fw-bold mb-0 text-danger" id="stat-deleted">
-          -@(Model.DashboardData?.DailySummaries.Sum(d => d.LinesDeleted) ?? 0)
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- ── Stat cards ─────────────────────────────────────────────────────────── -->
+<div class="row g-3 mb-4">
 
-<!-- ── Chart row ──────────────────────────────────────────────────────────── -->
+  <!-- Commits -->
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="card dm-card dm-stat-card h-100" style="--dm-accent:#6366f1">
+      <div class="card-body px-3 py-3">
+        <div class="stat-label"><i class="bi bi-git me-1"></i>Commits</div>
+        <div class="stat-value text-primary" id="stat-commits">@totalCommits</div>
+        <div class="dm-trend" id="trend-commits"></div>
+        <div class="stat-sublabel">last 14 days</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lines added -->
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="card dm-card dm-stat-card h-100" style="--dm-accent:#22c55e">
+      <div class="card-body px-3 py-3">
+        <div class="stat-label"><i class="bi bi-plus-lg me-1"></i>Lines Added</div>
+        <div class="stat-value text-success" id="stat-added">+@totalAdded</div>
+        <div class="dm-trend" id="trend-added"></div>
+        <div class="stat-sublabel">last 14 days</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lines deleted -->
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="card dm-card dm-stat-card h-100" style="--dm-accent:#ef4444">
+      <div class="card-body px-3 py-3">
+        <div class="stat-label"><i class="bi bi-dash-lg me-1"></i>Lines Deleted</div>
+        <div class="stat-value text-danger" id="stat-deleted">-@totalDeleted</div>
+        <div class="dm-trend" id="trend-deleted"></div>
+        <div class="stat-sublabel">last 14 days</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Active days -->
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="card dm-card dm-stat-card h-100" style="--dm-accent:#8b5cf6">
+      <div class="card-body px-3 py-3">
+        <div class="stat-label"><i class="bi bi-calendar-check me-1"></i>Active Days</div>
+        <div class="stat-value" id="stat-active">—</div>
+        <div class="stat-sublabel">with commits</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Current streak -->
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="card dm-card dm-stat-card h-100" style="--dm-accent:#f59e0b">
+      <div class="card-body px-3 py-3">
+        <div class="stat-label"><i class="bi bi-fire me-1"></i>Streak</div>
+        <div class="stat-value" id="stat-streak">—</div>
+        <div class="stat-sublabel">consecutive days</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Peak day -->
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="card dm-card dm-stat-card h-100" style="--dm-accent:#06b6d4">
+      <div class="card-body px-3 py-3">
+        <div class="stat-label"><i class="bi bi-trophy me-1"></i>Peak Day</div>
+        <div class="stat-value" id="stat-peak">—</div>
+        <div class="stat-sublabel" id="stat-peak-date">commits in one day</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /.row stat cards -->
+
+<!-- ── Chart ──────────────────────────────────────────────────────────────── -->
 <div class="card dm-card mb-4">
   <div class="card-header d-flex align-items-center justify-content-between">
     <span><i class="bi bi-bar-chart-line me-2"></i>Commit activity</span>
     <div class="d-flex gap-2 align-items-center">
-      <!-- Day-window selector -->
       <select id="chart-days" class="form-select form-select-sm" style="width:auto">
         <option value="7">7 days</option>
         <option value="14" selected>14 days</option>
@@ -156,44 +140,60 @@
       No commit data yet. Add a repository and trigger a scan to get started.
     </div>
   </div>
+  <!-- Highlights strip -->
+  <div class="highlight-strip" id="highlight-strip">
+    <div class="highlight-item">
+      <span class="hi-icon">🔥</span>
+      <span class="hi-value" id="hl-streak">—</span>
+      <span class="hi-label">day streak</span>
+    </div>
+    <div class="highlight-item">
+      <span class="hi-icon">🏆</span>
+      <span class="hi-value" id="hl-peak">—</span>
+      <span class="hi-label">best day (<span id="hl-peak-date">—</span>)</span>
+    </div>
+    <div class="highlight-item">
+      <span class="hi-icon">📅</span>
+      <span class="hi-value" id="hl-active">—</span>
+      <span class="hi-label">active days in window</span>
+    </div>
+    <div class="highlight-item">
+      <span class="hi-icon">📦</span>
+      <span class="hi-value" id="stat-repos">@repoCount</span>
+      <span class="hi-label">repositories tracked</span>
+    </div>
+  </div>
 </div>
 
 <!-- ── Bottom row: repositories + add-repo ───────────────────────────────── -->
 <div class="row g-4">
 
-  <!-- ── Add repository card ─────────────────────────────────────────── -->
+  <!-- Add repository -->
   <div class="col-lg-4">
     <div class="card dm-card h-100">
       <div class="card-header">
         <i class="bi bi-plus-circle me-2"></i>Add Repository
       </div>
       <div class="card-body">
-
-        @* Server-side add (works without JS) *@
-        <form method="post" asp-page-handler="AddRepository" id="add-repo-form"
-              novalidate>
+        <form method="post" asp-page-handler="AddRepository" id="add-repo-form" novalidate>
           @Html.AntiForgeryToken()
-
           <div class="mb-3">
-            <label for="RepoPath" class="form-label fw-medium">
-              Absolute path
-            </label>
+            <label for="RepoPath" class="form-label fw-medium">Path</label>
             <div class="input-group">
-              <span class="input-group-text">
-                <i class="bi bi-folder2-open"></i>
-              </span>
+              <span class="input-group-text"><i class="bi bi-folder2-open"></i></span>
               <input type="text"
                      id="RepoPath"
                      name="NewRepositoryPath"
                      class="form-control font-monospace"
-                     placeholder="/home/user/projects/my-repo"
+                     placeholder="/repos/my-project"
                      value="@Model.NewRepositoryPath"
                      autocomplete="off"
                      spellcheck="false"
                      required />
             </div>
             <div class="form-text">
-              Must contain a <code>.git</code> directory.
+              Must be a valid Git repository path.
+              In Docker, use the container path (e.g. <code>/repos/my-project</code>).
             </div>
           </div>
 
@@ -228,25 +228,22 @@
     </div>
   </div>
 
-  <!-- ── Repositories list card ──────────────────────────────────────── -->
+  <!-- Repositories list -->
   <div class="col-lg-8">
     <div class="card dm-card h-100">
       <div class="card-header d-flex align-items-center justify-content-between">
         <span><i class="bi bi-diagram-3 me-2"></i>Tracked Repositories</span>
-        <span id="repo-count-badge"
-              class="badge bg-primary rounded-pill">
-          @(Model.Repositories?.Count ?? 0)
+        <span id="repo-count-badge" class="badge bg-primary rounded-pill">
+          @repoCount
         </span>
       </div>
       <div class="card-body p-0">
 
-        <!-- Loading state -->
         <div id="repo-loading" class="text-center py-5 d-none">
           <div class="spinner-border text-primary mb-2" role="status"></div>
           <div class="small text-body-secondary">Loading repositories…</div>
         </div>
 
-        <!-- Empty state -->
         <div id="repo-empty"
              class="text-center py-5 @(Model.Repositories?.Count > 0 ? "d-none" : "")">
           <i class="bi bi-git fs-1 text-body-secondary d-block mb-2"></i>
@@ -254,7 +251,6 @@
           <p class="small text-body-secondary">Add one using the form on the left.</p>
         </div>
 
-        <!-- Table -->
         <div id="repo-table-wrap"
              class="@(Model.Repositories?.Count > 0 ? "" : "d-none")">
           <table class="table table-hover mb-0" id="repo-table">
@@ -271,23 +267,16 @@
               {
                 var isStale = (DateTime.UtcNow - repo.LastScannedUtc).TotalHours > 2;
                 <tr data-repo-id="@repo.Id">
-                  <td>
-                    <span class="fw-medium">@repo.Name</span>
-                  </td>
+                  <td><span class="fw-medium">@repo.Name</span></td>
                   <td class="d-none d-md-table-cell">
-                    <span class="repo-path text-body-secondary"
-                          title="@repo.Path">@repo.Path</span>
+                    <span class="repo-path text-body-secondary" title="@repo.Path">@repo.Path</span>
                   </td>
                   <td>
-                    <span class="@(isStale ? "stale" : "fresh")"
-                          title="@repo.LastScannedUtc.ToString("u")">
+                    <span class="@(isStale ? "stale" : "fresh")">
                       <i class="bi @(isStale ? "bi-clock-history" : "bi-check-circle-fill") me-1"></i>
-                      <span class="scan-time"
-                            data-utc="@repo.LastScannedUtc.ToString("O")">
-                        @(repo.LastScannedUtc == DateTime.UnixEpoch
-                            ? "Never"
-                            : repo.LastScannedUtc.AddHours(5).ToString("MMM d, HH:mm") + " PKT")
-                      </span>
+                      @(repo.LastScannedUtc == DateTime.UnixEpoch
+                          ? "Never"
+                          : repo.LastScannedUtc.AddHours(5).ToString("MMM d, HH:mm") + " PKT")
                     </span>
                   </td>
                   <td class="text-end">
@@ -311,13 +300,10 @@
 
 @section Scripts {
 <script>
-  // ── Bootstrap the chart from server-rendered data ────────────────────────
-  // These variables are written by the Razor template using server-side data,
-  // so the chart is fully populated on first paint — no extra round-trip needed.
   window.DM = {
     initialSummaries:    @Html.Raw(summariesJson),
     initialRepositories: @Html.Raw(repositoriesJson),
-    apiBase:             '',        // same origin
+    apiBase:             '',
     hubUrl:              '/dashboardHub',
   };
 </script>
