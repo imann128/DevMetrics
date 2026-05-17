@@ -133,14 +133,26 @@ public sealed class AddRepositoryCommandHandler
             "(no .git directory and no bare-repository structure found).",
             nameof(path));
     }
+
     /// <summary>
     /// Normalises a path: trims whitespace, resolves relative paths to absolute,
     /// and removes a trailing directory separator.
     /// </summary>
+    /// <remarks>
+    /// <see cref="System.IO.Path.GetFullPath"/> is called only for relative paths.
+    /// Already-rooted paths (e.g. <c>/repos/my-project</c> on Linux or
+    /// <c>D:\Projects\repo</c> on Windows) are used as-is to prevent the OS
+    /// from mangling a path intended for a different platform — for example,
+    /// calling <c>GetFullPath</c> on a Windows-style path inside a Linux container
+    /// would prepend the process working directory and produce a nonsense path.
+    /// </remarks>
     private static string NormalisePath(string path)
     {
         var trimmed  = path.Trim();
-        var absolute = System.IO.Path.GetFullPath(trimmed);
+        // Only expand relative paths — leave already-rooted paths untouched.
+        var absolute = System.IO.Path.IsPathRooted(trimmed)
+            ? trimmed
+            : System.IO.Path.GetFullPath(trimmed);
         return absolute.TrimEnd(
             System.IO.Path.DirectorySeparatorChar,
             System.IO.Path.AltDirectorySeparatorChar);

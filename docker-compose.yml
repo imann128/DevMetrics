@@ -34,11 +34,19 @@ services:
       # ── Git repository mounts ──────────────────────────────────────────────
       # Mount each local repository you want DevMetrics to scan.
       # Use read-only (:ro) so the container cannot modify your source code.
-      # The path you register in the dashboard must match the container path.
       #
-      # Example:
-      #   - /home/user/projects/my-api:/repos/my-api:ro
-      #   - /home/user/projects/my-frontend:/repos/my-frontend:ro
+      # IMPORTANT: inside the container only Linux paths exist.
+      # Map your Windows folder to a container path, then register
+      # that container path (e.g. /repos/DevMetrics) in the dashboard.
+      #
+      # Windows path syntax for Docker Desktop:
+      #   - D:\Users\Downloads\DevMetrics:/repos/DevMetrics:ro
+      #
+      # Add one line per repository, then run: docker compose up -d --build
+      #
+      # Example (multiple repos):
+      #   - D:\Projects\my-api:/repos/my-api:ro
+      #   - D:\Projects\my-frontend:/repos/my-frontend:ro
 
     restart: unless-stopped
 
