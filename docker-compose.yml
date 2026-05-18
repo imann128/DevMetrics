@@ -31,6 +31,7 @@ services:
       - devmetrics-data:/app/Data
       - devmetrics-logs:/app/Logs
       - D:\Users\Downloads\DevMetrics:/repos/DevMetrics:ro
+      - C:\Users\Hp\Documents\ogdc-project:/repos/ogdc-project
 
       # ── Git repository mounts ──────────────────────────────────────────────
       # Mount each local repository you want DevMetrics to scan.

@@ -228,6 +228,7 @@ function initChart(summaries) {
   const tickColor  = isDark ? 'rgba(255,255,255,.5)'  : 'rgba(0,0,0,.45)';
 
   chart = new Chart(canvas, {
+    type: 'line',
     data: buildChartData(summaries),
     options: {
       responsive:          true,
