@@ -11,13 +11,17 @@ COPY DevMetrics.Infrastructure/DevMetrics.Infrastructure.csproj DevMetrics.Infra
 COPY DevMetrics.Api/DevMetrics.Api.csproj                     DevMetrics.Api/
 
 # Restore for linux-x64 so LibGit2Sharp native binaries are included.
-RUN dotnet restore DevMetrics.Api/DevMetrics.Api.csproj \
+# --mount=type=cache persists the NuGet package cache across builds so packages
+# are not re-downloaded from nuget.org on every docker compose build.
+RUN --mount=type=cache,target=/root/.nuget/packages \
+    dotnet restore DevMetrics.Api/DevMetrics.Api.csproj \
     --runtime linux-x64
 
 # Copy the rest of the source and publish a Release build.
 COPY . .
 
-RUN dotnet publish DevMetrics.Api/DevMetrics.Api.csproj \
+RUN --mount=type=cache,target=/root/.nuget/packages \
+    dotnet publish DevMetrics.Api/DevMetrics.Api.csproj \
     --configuration Release \
     --runtime linux-x64 \
     --self-contained false \
