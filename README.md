@@ -34,14 +34,14 @@
 git clone https://github.com/your-org/devmetrics.git
 cd devmetrics
 
-### Option B — Docker
+The image is published on Docker Hub at **[imann122/devmetrics](https://hub.docker.com/r/imann122/devmetrics)**.
 
 ```bash
 # Windows
-docker run -p 5000:80 -v C:\Users\YourName\Projects\your-repo:/repos/my-repo yourusername/devmetrics
+docker run -p 5000:80 -v C:\Users\YourName\Projects\your-repo:/repos/my-repo imann122/devmetrics
 
 # Mac/Linux
-docker run -p 5000:80 -v /home/username/projects/your-repo:/repos/my-repo yourusername/devmetrics
+docker run -p 5000:80 -v /home/username/projects/your-repo:/repos/my-repo imann122/devmetrics
 ```
 
 1. Replace the path before `:` with any Git repository on your machine
