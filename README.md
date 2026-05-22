@@ -37,7 +37,8 @@ Write-Host "Open http://localhost:5000 and add /repos/my-repo"
 powershell.\run.ps1 -RepoPath "C:\Users\Name\Projects\my-repo"
 
 Mac/Linux (run.sh):
-# !/bin/bash
+#!/bin/bash
+
 docker run -p 5000:80 -v "$1:/repos/my-repo" imann122/devmetrics
 echo "Open http://localhost:5000 and add /repos/my-repo"
 ```
