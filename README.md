@@ -28,7 +28,22 @@
 ---
 
 ## Quick Start
+For a quick start, simply add the Windows or Mac/Linux Path to these commands. Make sure you have Docker
+Desktop installed and running in the background while executing these commands
+'''bash
+# Windows (run.ps1):
+powershellparam([string]$RepoPath)
+docker run -p 5000:80 -v "${RepoPath}:/repos/my-repo" imann122/devmetrics
+Write-Host "Open http://localhost:5000 and add /repos/my-repo"
+powershell.\run.ps1 -RepoPath "C:\Users\Name\Projects\my-repo"
 
+# Mac/Linux (run.sh):
+'''bash
+#!/bin/bash
+docker run -p 5000:80 -v "$1:/repos/my-repo" imann122/devmetrics
+echo "Open http://localhost:5000 and add /repos/my-repo"
+
+## Clone the Repository (If you want to dive into the code)
 ```bash
 # 1. Clone the repository
 git clone https://github.com/your-org/devmetrics.git
@@ -43,8 +58,9 @@ docker run -p 5000:80 -v C:\Users\YourName\Projects\your-repo:/repos/my-repo ima
 # Mac/Linux
 docker run -p 5000:80 -v /home/username/projects/your-repo:/repos/my-repo imann122/devmetrics
 ```
-
-1. Replace the path before `:` with any Git repository on your machine
+Make sure you have Docker Desktop installed and running in the background while executing these commands
+1. Replace the path before `:` with any Git repository on your machine in the
+   docker-compose.yml file under volume
 2. Open **http://localhost:5000**
 3. Click **Add Repository** and enter `/repos/my-repo`
 4. Click **Scan now** to populate the dashboard
