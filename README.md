@@ -30,18 +30,17 @@
 ## Quick Start
 For a quick start, simply add the Windows or Mac/Linux Path to these commands. Make sure you have Docker
 Desktop installed and running in the background while executing these commands
-'''bash
-# Windows (run.ps1):
-powershellparam([string]$RepoPath)
+```bash
+# Windows
 docker run -p 5000:80 -v "${RepoPath}:/repos/my-repo" imann122/devmetrics
 Write-Host "Open http://localhost:5000 and add /repos/my-repo"
 powershell.\run.ps1 -RepoPath "C:\Users\Name\Projects\my-repo"
 
-# Mac/Linux (run.sh):
-'''bash
-#!/bin/bash
+Mac/Linux (run.sh):
+# !/bin/bash
 docker run -p 5000:80 -v "$1:/repos/my-repo" imann122/devmetrics
 echo "Open http://localhost:5000 and add /repos/my-repo"
+```
 
 ## Clone the Repository (If you want to dive into the code)
 ```bash
@@ -51,7 +50,6 @@ cd devmetrics
 
 The image is published on Docker Hub at **[imann122/devmetrics](https://hub.docker.com/r/imann122/devmetrics)**.
 
-```bash
 # Windows
 docker run -p 5000:80 -v C:\Users\YourName\Projects\your-repo:/repos/my-repo imann122/devmetrics
 
